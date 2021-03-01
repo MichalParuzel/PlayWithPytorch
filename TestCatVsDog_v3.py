@@ -24,7 +24,7 @@ if __name__ == "__main__":
     dataloaders = {dict_key: DataLoader(image_datasets, batch_size=4,
                                         shuffle=True, num_workers=1)}
 
-    dataset_sizes = len(dataloaders[dict_key])
+    dataset_sizes = {dict_key: len(image_datasets)}
     #class_names = image_datasets['train'].classes
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
