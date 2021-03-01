@@ -33,6 +33,7 @@ if __name__ == "__main__":
         So next part is coming hear, loading the pretrained model
     '''
 
+    # Definitely need to check this part, it looks it is freezing the layer, so need to make sure how it works
     model_ft = models.resnet18(pretrained=True)
     num_ftrs = model_ft.fc.in_features
     model_ft.fc = nn.Linear(num_ftrs, 2)
