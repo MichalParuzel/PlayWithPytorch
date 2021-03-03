@@ -19,7 +19,7 @@ def train_model(model, criterion, optimizer, scheduler, dataloaders, device, dat
         print('-' * 10)
 
         # Each epoch has a training and validation phase
-        for phase in ['train']:
+        for phase in ['train', 'val']:
             if phase == 'train':
                 model.train()  # Set model to training mode
             else:

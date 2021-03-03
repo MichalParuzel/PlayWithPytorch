@@ -15,16 +15,20 @@ if __name__ == "__main__":
         Than there is a torch.device, which is well, device
     '''
     pet_image_location_all = r"C:\Users\HFD347\develp\pettest\oxford-iiit-pet\images"
-    image_datasets = CustomDataSet(pet_image_location_all, HelperFunctions.my_transform)
-    train_loader = DataLoader(dataset=image_datasets,
-                                         batch_size=4,
-                                         shuffle=True,
-                                         num_workers=1)
-    dict_key = "train"
-    dataloaders = {dict_key: DataLoader(image_datasets, batch_size=4,
-                                        shuffle=True, num_workers=1)}
+    dataset_dict = CustomDataSet.split_to_train_validate_dataset(pet_image_location_all)
 
-    dataset_sizes = {dict_key: len(image_datasets)}
+    image_datasets = {x: CustomDataSet(pet_image_location_all, dataset_dict[x], HelperFunctions.my_transform)
+                      for x in ['train', 'val']}
+
+    #train_loader = DataLoader(dataset=image_datasets,
+    #                                     batch_size=4,
+    #                                     shuffle=True,
+    #                                     num_workers=1)
+    #dict_key = "train"
+    dataloaders = {x: DataLoader(image_datasets[x], batch_size=4, shuffle=True, num_workers=4)
+                   for x in ['train', 'val']}
+
+    dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
     #class_names = image_datasets['train'].classes
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
