@@ -29,9 +29,6 @@ def train_model(model, criterion, optimizer, scheduler, dataloaders, device, dat
             running_corrects = 0
 
             # Iterate over data.
-            # See:
-            #https://discuss.pytorch.org/t/valueerror-too-many-values-to-unpack-expected-2-trainloader-is-showing-wierd-error/34293/2
-            # there is a problem with the DataLoader which needs to be solved
             for inputs, labels in dataloaders[phase]:
                 inputs = inputs.to(device)
                 labels = labels.to(device).long()
@@ -85,3 +82,8 @@ my_transform = transforms.Compose([
         transforms.RandomHorizontalFlip(),
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
+
+
+def freeze_all_layers(model: torch.nn.Module):
+    for param in model.parameters():
+        param.requires_grad = False

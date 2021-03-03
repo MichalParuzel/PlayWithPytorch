@@ -36,8 +36,13 @@ if __name__ == "__main__":
     # Definitely need to check this part, it looks it is freezing the layer, so need to make sure how it works
     model_ft = models.resnet18(pretrained=True)
     num_ftrs = model_ft.fc.in_features
+
+    HelperFunctions.freeze_all_layers(model_ft)
+
     model_ft.fc = nn.Linear(num_ftrs, 2)
 
+
+    #
     model_ft = model_ft.to(device)
 
     criterion = nn.CrossEntropyLoss()
