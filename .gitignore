@@ -2,5 +2,5 @@
 /oxford-iiit-pet/
 /.ipynb_checkpoints/
 /.idea/
-/.__pycache__/
+/__pycache__/
 /TestingPytorchTransferLearning.ipynb
