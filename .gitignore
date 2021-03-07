@@ -1,0 +1,7 @@
+/oxford-iiit-pet.tar
+/oxford-iiit-pet/
+/.ipynb_checkpoints/
+/.idea/
+/__pycache__/
+/NotMyModels/TestingPytorchTransferLearning.ipynb
+/NotMyModels/

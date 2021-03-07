@@ -1,0 +1,24 @@
+#So lets make it a place to store some ideas related to that project
+
+##Ideas for things that can be implemented
+
+###NLP:
+- Text summarization
+- QA system
+- ChatBot
+>Simple conversations about the specific source
+- Book analysis
+>Extract the book main characters. Answer questions related to the book
+
+
+###Cross sections:
+- Text summarization of sport news with the prediction of the game outcome based on these
+
+##Some questions that comes to mind
+
+###In context of NLP
+- It looks like all of models are trained on predicting the next word.
+> Can we do different/better if we change the way we train for?
+- Words are being transformed to numbers (in vector form) embedded matrixes
+> Can we make a different represenation? What I mean, maybe
+> there would be a possibility to make it more robust, open to work in different 'senses' translate from language to image etc.
