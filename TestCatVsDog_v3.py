@@ -25,7 +25,7 @@ if __name__ == "__main__":
     #                                     shuffle=True,
     #                                     num_workers=1)
     #dict_key = "train"
-    dataloaders = {x: DataLoader(image_datasets[x], batch_size=4, shuffle=True, num_workers=4)
+    dataloaders = {x: DataLoader(image_datasets[x], batch_size=1, shuffle=True, num_workers=4)
                    for x in ['train', 'val']}
 
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
@@ -57,6 +57,16 @@ if __name__ == "__main__":
     # Decay LR by a factor of 0.1 every 7 epochs
     exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
 
-    model_ft = HelperFunctions.train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataloaders, device, dataset_sizes, num_epochs=10)
+    model_ft = HelperFunctions.train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataloaders, device, dataset_sizes, num_epochs=1)
+
+    '''
+    path_to_model = r".\SavedModels\ModelWithCheckpoints.pth"
+    model_ft = HelperFunctions.train_model_with_checkpoints(model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataloaders, device,
+                                           dataset_sizes, path_to_model, num_epochs=10)
+    #Save cat vs dog model:
+    #path_to_model = r".\FirstModel.pth"
+    #torch.save(model_ft.state_dict(), path_to_model)
+    '''
+
 
     print("Haha it is done")
