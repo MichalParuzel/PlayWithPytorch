@@ -3,30 +3,42 @@ from torchvision import models, transforms
 import torch.nn as nn
 import torch
 import os
+import random
 from PIL import Image, ImageFile
+
 
 my_transform = transforms.Compose([
     transforms.RandomResizedCrop(224),
     transforms.ToTensor(),
     transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
 
+class ToCount:
+    def __init__(self):
+        self.total = 0
+        self.wrong = 0
+        self.write = 0
 
-def make_prediction(model, path_to_image):
+def make_prediction(model, path_to_image, label, to_count):
     model.eval()
     ImageFile.LOAD_TRUNCATED_IMAGES = True
     image = Image.open(path_to_image).convert("RGB")
+    #image.show()
     transformed_image = my_transform(image)
     transformed_image = transformed_image.unsqueeze(0) #this is adding the additional dimension
     output = model.forward(transformed_image)
     _, y_hat = output.max(1)
 
-    if y_hat.item() == 0:
-        print("We got a cat!")
-    elif y_hat.item() == 1:
-        print("We got a dog!")
+    we_preditct = "Cat" if y_hat.item() == 0 else "Dog"
+    to_count.total += 1
+    if we_preditct == label:
+        to_count.write += 1
     else:
-        print("What do we have???")
+        to_count.wrong += 1
 
+def what_is_it(image_name: str):
+    if image_name[0].isupper():
+        return "Cat"
+    return "Dog"
 
 if __name__ == "__main__":
     path_to_model = r".\SavedModels\ModelWithCheckpoints.pth"
@@ -40,11 +52,17 @@ if __name__ == "__main__":
     # Implement passing the image to the model
     path_to_image = r"C:\Users\HFD347\develp\pettest\oxford-iiit-pet\images"
     list_of_images = os.listdir(path_to_image)
+    random.shuffle(list_of_images)
 
+    to_count = ToCount()
     for image_name in list_of_images:
+        should_be = what_is_it(image_name)
+
         image_full_path = os.path.join(path_to_image, image_name)
-        print("{0} is: ".format(image_name))
-        make_prediction(model, image_full_path)
+        #print("{0} is: ".format(image_name))
+        make_prediction(model, image_full_path, should_be, to_count)
+
+    print("Total images: {0} of which {1} was wrong".format(to_count.total, to_count.wrong))
 
 '''
     # For now lets leave it and see how the checkpoint looks like
@@ -62,6 +80,7 @@ if __name__ == "__main__":
     
     model.eval()
 '''
+
 
 
 
