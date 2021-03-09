@@ -31,7 +31,7 @@ def train_model(model, criterion, optimizer, scheduler, dataloaders, device, dat
             # Iterate over data.
             for inputs, labels in dataloaders[phase]:
                 inputs = inputs.to(device)
-                labels = labels.to(device).long()
+                labels = labels.to(device) #.long()
 
                 # zero the parameter gradients
                 optimizer.zero_grad()
