@@ -52,14 +52,15 @@ class CustomAnimal10DataSet(Dataset):
     def __init__(self, main_dir, transform):
         self.main_dir = main_dir
         self.transform = transform
+
         self.all_images = []
         self.all_images_label_map = {}
-        self.label_mapping = {}
+        self.label_to_tensor_mapping = {}
 
         self.read_folders_and_map()
 
     def __len__(self):
-        return len(self.image_label_mapping)
+        return len(self.all_images)
 
     def __getitem__(self, idx):
         image_name = self.all_images[idx]
@@ -69,7 +70,7 @@ class CustomAnimal10DataSet(Dataset):
         image = Image.open(img_loc).convert("RGB")
         tensor_image = self.transform(image)
 
-        label = np.array(self.label_mapping[label_name]).astype(np.int64)
+        label = np.array(self.label_to_tensor_mapping[label_name]).astype(np.int64)
         return tensor_image, label
 
     def read_folders_and_map(self):
@@ -91,6 +92,6 @@ class CustomAnimal10DataSet(Dataset):
         labels.sort()
         idx = 0
         for label in labels:
-            self.label_mapping[label] = np.array(idx).astype(np.int64)
+            self.label_to_tensor_mapping[label] = np.array(idx).astype(np.int64)
             idx += 1
 
