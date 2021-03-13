@@ -8,21 +8,6 @@ import torch.optim as optim
 
 
 def data_preparation(image_dataset, pet_image_location_all, loss_function, batch_size=1, shuffle=True, num_workers=4, pretrained=True, fully_connected_layer_size=2, num_epochs=1):
-
-    #this part will not work for CustomAnimal10DataSet -> TODO: figure out the way to make it generic
-    #dataset_dict = CustomDataSet.split_to_train_validate_dataset(pet_image_location_all)
-
-    #figure out how to make the dataset object type generic
-    """
-    image_datasets = {x: CustomAnimal10DataSet(pet_image_location_all, dataset_dict[x], HelperFunctions.my_transform)
-                  for x in ['train', 'val']}
-    dataloaders = {x: DataLoader(image_datasets[x], batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)
-                   for x in ['train', 'val']}
-
-    dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'val']}
-    """
-
-    #image_dataset = CustomAnimal10DataSet(pet_image_location_all, HelperFunctions.my_transform)
     dataloader = {"train": DataLoader(image_dataset, batch_size=batch_size, shuffle=shuffle, num_workers=num_workers)}
     dataset_size = {"train": len(image_dataset)}
 
