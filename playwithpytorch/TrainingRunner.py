@@ -1,5 +1,5 @@
 #import HelperFunctions
-from CustomDataSet import CustomDataSet, CustomAnimal10DataSet
+#from CustomDataSet import CustomDataSet, CustomAnimal10DataSet
 from torch.utils.data import DataLoader
 from torchvision import models
 import torch.nn as nn
