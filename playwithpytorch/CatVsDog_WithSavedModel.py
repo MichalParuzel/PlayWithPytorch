@@ -27,9 +27,11 @@ def make_prediction(model, path_to_image, label, to_count, mapping):
     transformed_image = transformed_image.unsqueeze(0) #this is adding the additional dimension
     output = model.forward(transformed_image)
     _, y_hat = output.max(1)
+    _, preds = torch.max(output, 1)
 
     #we_preditct = "Cat" if y_hat.item() == 0 else "Dog"
     we_preditct = mapping[y_hat.item()]
+    we_preditct_2 = mapping[preds.item()]
 
     to_count.total += 1
     if we_preditct == label:
@@ -43,9 +45,9 @@ def what_is_it(image_name: str):
     return "Dog"
 
 if __name__ == "__main__":
-    path_to_model = r"C:\Users\HFD347\develp\pettest\Animal10_model.pth"
+    path_to_model = r"C:\Users\HFD347\develp\PlayWithPytorch\playwithpytorch\TrainedModels\training_after_10_epoches.pth"
     #checkpoint = torch.load(path_to_model)
-    model_d = torch.load(path_to_model)
+    model_d = torch.load(path_to_model, map_location=torch.device('cpu'))
 
 
     model = models.resnet18(pretrained=False)
