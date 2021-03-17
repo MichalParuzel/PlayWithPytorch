@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     pet_image_location_all = r"C:\Users\HFD347\develp\Datasets\Animals-10"
     dataset = CustomAnimal10DataSet(pet_image_location_all, HelperFunctions.my_transform)
-    dataloader = DataLoader(dataset, batch_size=16, shuffle=True, num_workers=16)
+    dataloader = DataLoader(dataset, batch_size=1, shuffle=True, num_workers=1)
     dataset_size = len(dataset)
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -28,8 +28,9 @@ if __name__ == "__main__":
     optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.9)
     exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
 
+    HelperFunctions.validate_mode_based_on_dataset(model_ft, dataset, {}, {"cane"}, 100)
     #HelperFunctions.validate_model(model_ft, criterion, dataloader, device, dataset_size, 100)
-    trained_model = HelperFunctions.train_model_new(model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataloader, device, dataset_size, num_epochs=1, print_every=1600)
+    #trained_model = HelperFunctions.train_model_new(model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataloader, device, dataset_size, num_epochs=1, print_every=1000)
     #model_ft = HelperFunctions.train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataloader, device, dataset_size, num_epochs=1)
 
     '''
@@ -40,6 +41,3 @@ if __name__ == "__main__":
     #path_to_model = r".\FirstModel.pth"
     #torch.save(model_ft.state_dict(), path_to_model)
     '''
-
-
-    print("Haha it is done")

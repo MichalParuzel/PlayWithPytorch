@@ -7,6 +7,10 @@ from torchvision import datasets, models, transforms
 import matplotlib.pyplot as plt
 import time
 import copy
+import numpy as np
+import os
+from PIL import Image, ImageFile
+from os import path, listdir
 
 
 def train_model_new(model, criterion, optimizer, scheduler, dataloader, device, dataset_size, num_epochs=25, print_every=100):
@@ -85,6 +89,47 @@ def train_model_new(model, criterion, optimizer, scheduler, dataloader, device, 
     return model
 
 
+def validate_mode_based_on_dataset(model, dataset, ignore_label, include_label, print_every=100):
+    model.eval()
+    total = 0
+    correct = 0
+    wrong = 0
+
+    # add the logic to manually pick from this dataset
+    for idx in range(len(dataset.all_images)):
+        image_name = dataset.all_images[idx]
+        label_name = dataset.all_images_label_map[idx]
+        if label_name in ignore_label:
+            continue
+
+        if label_name not in include_label:
+            continue
+
+        img_loc = path.join(dataset.main_dir, label_name, image_name)
+        image = Image.open(img_loc).convert("RGB")
+        tensor_image = experiment_transform(image)
+        inputs = tensor_image.unsqueeze(0)
+        label = np.array(dataset.label_to_tensor_mapping[label_name]).astype(np.int64)
+        #labels = labels.to(device)
+
+        # forward
+        # track history if only in train
+        with torch.set_grad_enabled(False):
+            outputs = model(inputs)
+            _, preds = torch.max(outputs, 1)
+            #loss = criterion(outputs, labels)
+            predicted = dataset.labels_in_order[preds.item()]
+            total += 1
+            if preds.item() != label.item():
+                wrong += 1
+                print("Predicted: {0} Should be: {1}".format(predicted, label_name))
+            else:
+                correct += 1
+        if total % print_every == 0:
+            print("total: {0}, correct: {1} wrong {2}".format(total, correct, wrong))
+            print("Current acc: {0}%".format(correct / total * 100))
+
+
 def validate_model(model, criterion, dataloader, device, dataset_sizes, print_every=100):
     model.eval()
     running_loss = 0.0
@@ -103,11 +148,12 @@ def validate_model(model, criterion, dataloader, device, dataset_sizes, print_ev
             outputs = model(inputs)
             _, preds = torch.max(outputs, 1)
             loss = criterion(outputs, labels)
-            total += 1
-            if preds.item() != labels.item():
-                wrong += 1
-            else:
-                correct += 1
+            total += len(preds)
+            for idx in range(len(preds)):
+                if preds[idx].item() != labels[idx].item():
+                    wrong += 1
+                else:
+                    correct += 1
         # statistics
         running_loss += loss.item() * inputs.size(0)
         running_corrects += torch.sum(preds == labels.data)
@@ -287,18 +333,26 @@ my_transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
 
+experiment_transform = transforms.Compose([
+        transforms.RandomResizedCrop(228),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])])
 
-def load_model(device, output_size, custom=True, path_to_model=""):
+
+def load_model(device, output_size, custom=True, path_to_model="", freeze_layers=True):
     if not custom:
         model_ft = models.resnet18(pretrained=True)
         num_ftrs = model_ft.fc.in_features
-        freeze_all_layers(model_ft)
+        if freeze_layers:
+            freeze_all_layers(model_ft)
         model_ft.fc = nn.Linear(num_ftrs, output_size)
         model_ft = model_ft.to(device)
         return model_ft
     else:
         model_ft = models.resnet18(pretrained=False)
-        freeze_all_layers(model_ft)
+        if freeze_layers:
+            freeze_all_layers(model_ft)
         num_ftrs = model_ft.fc.in_features
         model_ft.fc = nn.Linear(num_ftrs, output_size)
         model_state = torch.load(path_to_model, map_location=device)

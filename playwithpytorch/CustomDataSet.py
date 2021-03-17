@@ -90,8 +90,8 @@ class CustomAnimal10DataSet(Dataset):
         # Creates mapping for the labels
         labels = list(labels_set)
         labels.sort()
+        self.labels_in_order = labels
         idx = 0
         for label in labels:
             self.label_to_tensor_mapping[label] = np.array(idx).astype(np.int64)
             idx += 1
-
