@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     pet_image_location_all = r"C:\Users\HFD347\develp\Datasets\Animals-10"
     dataset = CustomAnimal10DataSet(pet_image_location_all, HelperFunctions.my_transform)
-    dataloader = DataLoader(dataset, batch_size=2, shuffle=True, num_workers=1)
+    dataloader = DataLoader(dataset, batch_size=16, shuffle=True, num_workers=16)
     dataset_size = len(dataset)
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -29,7 +29,7 @@ if __name__ == "__main__":
     exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
 
     #HelperFunctions.validate_model(model_ft, criterion, dataloader, device, dataset_size, 100)
-    trained_model = HelperFunctions.train_model_new(model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataloader, device, dataset_size, num_epochs=1, print_every=100)
+    trained_model = HelperFunctions.train_model_new(model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataloader, device, dataset_size, num_epochs=1, print_every=1600)
     #model_ft = HelperFunctions.train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataloader, device, dataset_size, num_epochs=1)
 
     '''

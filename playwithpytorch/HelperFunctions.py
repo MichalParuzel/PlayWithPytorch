@@ -9,7 +9,7 @@ import time
 import copy
 
 
-def train_model_new(model, criterion, optimizer, scheduler, dataloader, device, dataset_sizes, num_epochs=25, print_every=100):
+def train_model_new(model, criterion, optimizer, scheduler, dataloader, device, dataset_size, num_epochs=25, print_every=100):
     since = time.time()
 
     best_model_wts = copy.deepcopy(model.state_dict())
@@ -61,8 +61,8 @@ def train_model_new(model, criterion, optimizer, scheduler, dataloader, device, 
 
         scheduler.step()
 
-        epoch_loss = running_loss / dataset_sizes[phase]
-        epoch_acc = running_corrects.double() / dataset_sizes[phase]
+        epoch_loss = running_loss / dataset_size
+        epoch_acc = running_corrects.double() / dataset_size
 
         print('{} Loss: {:.4f} Acc: {:.4f}'.format(
             phase, epoch_loss, epoch_acc))
