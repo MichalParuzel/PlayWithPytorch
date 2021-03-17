@@ -17,7 +17,7 @@ if __name__ == "__main__":
 
     pet_image_location_all = r"C:\Users\HFD347\develp\Datasets\Animals-10"
     dataset = CustomAnimal10DataSet(pet_image_location_all, HelperFunctions.my_transform)
-    dataloader = DataLoader(dataset, batch_size=1, shuffle=True, num_workers=1)
+    dataloader = DataLoader(dataset, batch_size=2, shuffle=True, num_workers=1)
     dataset_size = len(dataset)
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")

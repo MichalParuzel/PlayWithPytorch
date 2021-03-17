@@ -41,11 +41,12 @@ def train_model_new(model, criterion, optimizer, scheduler, dataloader, device, 
                 _, preds = torch.max(outputs, 1)
                 loss = criterion(outputs, labels)
 
-                total += 1
-                if preds.item() != labels.item():
-                    wrong += 1
-                else:
-                    correct += 1
+                total += len(preds)
+                for idx in range(len(preds)):
+                    if preds[idx].item() != labels[idx].item():
+                        wrong += 1
+                    else:
+                        correct += 1
 
                 loss.backward()
                 optimizer.step()
