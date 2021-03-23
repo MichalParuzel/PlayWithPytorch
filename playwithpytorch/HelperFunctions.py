@@ -95,6 +95,9 @@ def validate_mode_based_on_dataset(model, dataset, ignore_label, include_label, 
     correct = 0
     wrong = 0
 
+    #Predicted, Should be, image_location
+    wrong_predictions = []
+
     # add the logic to manually pick from this dataset
     for idx in range(len(dataset.all_images)):
         image_name = dataset.all_images[idx]
@@ -102,7 +105,7 @@ def validate_mode_based_on_dataset(model, dataset, ignore_label, include_label, 
         if label_name in ignore_label:
             continue
 
-        if label_name not in include_label:
+        if label_name not in include_label and include_label != {}:
             continue
 
         img_loc = path.join(dataset.main_dir, label_name, image_name)
@@ -123,11 +126,17 @@ def validate_mode_based_on_dataset(model, dataset, ignore_label, include_label, 
             if preds.item() != label.item():
                 wrong += 1
                 print("Predicted: {0} Should be: {1}".format(predicted, label_name))
+                wrong_predictions.append((predicted, label_name, img_loc))
+
+                if wrong == 15:
+                    break
             else:
                 correct += 1
         if total % print_every == 0:
             print("total: {0}, correct: {1} wrong {2}".format(total, correct, wrong))
             print("Current acc: {0}%".format(correct / total * 100))
+
+    return wrong_predictions
 
 
 def validate_model(model, criterion, dataloader, device, dataset_sizes, print_every=100):

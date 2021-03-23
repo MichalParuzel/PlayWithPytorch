@@ -22,16 +22,23 @@ if __name__ == "__main__":
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     model_ft = HelperFunctions.load_model(device, 10, True, path_to_model=r"C:\Users\HFD347\develp\PlayWithPytorch\playwithpytorch\TrainedModels\changed_training.pth")
+
     #model_ft = HelperFunctions.load_model(device, 10, False)
 
     criterion = nn.CrossEntropyLoss()
     optimizer_ft = optim.SGD(model_ft.parameters(), lr=0.001, momentum=0.9)
     exp_lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer_ft, step_size=7, gamma=0.1)
 
-    HelperFunctions.validate_mode_based_on_dataset(model_ft, dataset, {}, {"cane"}, 100)
-    #HelperFunctions.validate_model(model_ft, criterion, dataloader, device, dataset_size, 100)
+    #wrong_predictions = HelperFunctions.validate_mode_based_on_dataset(model_ft, dataset, {}, {}, 100)
+    HelperFunctions.validate_model(model_ft, criterion, dataloader, device, dataset_size, 100)
     #trained_model = HelperFunctions.train_model_new(model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataloader, device, dataset_size, num_epochs=1, print_every=1000)
     #model_ft = HelperFunctions.train_model(model_ft, criterion, optimizer_ft, exp_lr_scheduler, dataloader, device, dataset_size, num_epochs=1)
+
+    #import json
+    #with open(r"C:\Users\HFD347\develp\PlayWithPytorch\playwithpytorch\TrainedModels\wrongpred.json", 'w') as f:
+    #    # indent=2 is not needed but makes the file human-readable
+    #    json.dump(wrong_predictions, f, indent=2)
+
 
     '''
     path_to_model = r".\SavedModels\ModelWithCheckpoints.pth"
