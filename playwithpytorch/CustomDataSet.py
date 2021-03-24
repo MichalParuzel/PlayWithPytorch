@@ -6,6 +6,35 @@ import os
 from PIL import Image, ImageFile
 
 
+class MoreGenericDataset(Dataset):
+    def __init__(self, main_dir, img_list, label_list, img_subfolders, transform):
+        self.main_dir = main_dir
+        self.transform = transform
+        self.img_list = img_list
+        self.label_list = label_list
+        self.img_subfolder_list = img_subfolders
+
+    def __len__(self):
+        return len(self.img_list)
+
+    def __getitem__(self, item):
+        image_name = self.img_list[item]
+        img_loc = ""
+        if type(self.img_subfolder_list) is str and self.img_subfolder_list != "":
+            img_loc = path.join(self.main_dir, self.img_subfolder_list, image_name)
+        elif self.img_subfolder_list is not None and self.img_subfolder_list[item] == "":
+            img_loc = path.join(self.main_dir, self.img_subfolder_list[item], image_name)
+        else:
+            img_loc = path.join(self.main_dir, image_name)
+
+        ImageFile.LOAD_TRUNCATED_IMAGES = True
+        image = Image.open(img_loc).convert("RGB")
+        tensor_image = self.transform(image)
+        label = self.label_list[item]
+
+        return tensor_image, label
+
+
 class CustomDataSet(Dataset):
     def __init__(self, main_dir, img_list, transform):
         self.main_dir = main_dir
