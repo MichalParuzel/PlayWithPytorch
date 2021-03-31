@@ -27,13 +27,13 @@ class MoreGenericDataset(Dataset):
         else:
             img_loc = path.join(self.main_dir, image_name)
 
+
         ImageFile.LOAD_TRUNCATED_IMAGES = True
         image = Image.open(img_loc).convert("RGB")
         tensor_image = self.transform(image)
         label = self.label_list[item]
 
         return tensor_image, label
-
 
 class CustomDataSet(Dataset):
     def __init__(self, main_dir, img_list, transform):
